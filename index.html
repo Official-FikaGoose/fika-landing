@@ -1,0 +1,94 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fika Goose Store</title>
+  <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.73.2/lib/index.iife.min.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f5f5f5; }
+    .product { border: 1px solid #ccc; padding: 20px; margin: 20px 0; background: #fff; border-radius: 10px; }
+    button { padding: 10px 20px; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+  <h1>🦢 Welcome to Fika Goose</h1>
+  <p>Connect your wallet to buy premium products with SOL or FikaCoin</p>
+  <button id="connect-wallet">Connect Phantom Wallet</button>
+  <p id="wallet-address"></p>
+
+  <div class="product">
+    <h2>📘 Fika Goose Secrets (eBook)</h2>
+    <p>Discover underground knowledge. Instant delivery after payment.</p>
+    <p><strong>Price: 0.1 SOL</strong></p>
+    <button onclick="buyEbook()">Buy eBook</button>
+    <div id="ebook-download" style="display:none;">
+      ✅ Payment confirmed! <a href="assets/ebook.pdf" download>Download your eBook</a>
+    </div>
+  </div>
+
+  <div class="product">
+    <h2>🔐 Fika Goose Vault (USB Stick)</h2>
+    <p>Ultimate privacy USB with Tails OS + encrypted chat app. Only 210 units!</p>
+    <p><strong>Price: 210 EUR (in SOL/FikaCoin)</strong></p>
+    <button onclick="buyVault()">Buy USB Vault</button>
+    <div id="vault-form" style="display:none;">
+      ✅ Payment confirmed! Enter your shipping info:<br>
+      <textarea placeholder="Name, Address, Country..." rows="4" cols="40"></textarea>
+      <p><em>We will NOT store this info online. It will be shown once to you and sent manually.</em></p>
+    </div>
+  </div>
+
+  <script>
+    let userPublicKey;
+    const recipientWallet = 'YOUR_WALLET_ADDRESS'; // Replace with your wallet
+    const solana = window.solana;
+
+    document.getElementById("connect-wallet").onclick = async () => {
+      if (solana && solana.isPhantom) {
+        try {
+          const res = await solana.connect();
+          userPublicKey = res.publicKey.toString();
+          document.getElementById("wallet-address").innerText = "Connected: " + userPublicKey;
+        } catch (err) {
+          console.error("Wallet connection failed", err);
+        }
+      } else {
+        alert("Install Phantom Wallet");
+      }
+    };
+
+    async function sendSol(amountSol) {
+      const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('mainnet-beta'));
+      const transaction = new solanaWeb3.Transaction().add(
+        solanaWeb3.SystemProgram.transfer({
+          fromPubkey: solana.publicKey,
+          toPubkey: new solanaWeb3.PublicKey(recipientWallet),
+          lamports: solanaWeb3.LAMPORTS_PER_SOL * amountSol,
+        })
+      );
+
+      transaction.feePayer = solana.publicKey;
+      transaction.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
+      const signed = await solana.signTransaction(transaction);
+      const txid = await connection.sendRawTransaction(signed.serialize());
+      await connection.confirmTransaction(txid);
+      return txid;
+    }
+
+    async function buyEbook() {
+      const tx = await sendSol(0.1);
+      if (tx) {
+        document.getElementById("ebook-download").style.display = "block";
+      }
+    }
+
+    async function buyVault() {
+      const tx = await sendSol(2.1); // Adjust based on EUR/SOL rate
+      if (tx) {
+        document.getElementById("vault-form").style.display = "block";
+      }
+    }
+  </script>
+
+</body>
+</html>
