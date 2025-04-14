@@ -1,94 +1,139 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Fika Goose Store</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fika Goose™ Official Store</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.73.2/lib/index.iife.min.js"></script>
   <style>
-    body { font-family: sans-serif; padding: 20px; background: #f5f5f5; }
-    .product { border: 1px solid #ccc; padding: 20px; margin: 20px 0; background: #fff; border-radius: 10px; }
-    button { padding: 10px 20px; margin-top: 10px; }
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: 'Helvetica Neue', sans-serif;
+    }
+    .glass {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 2xl;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      backdrop-filter: blur(10px);
+    }
   </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col items-center justify-start p-8 space-y-12">
+  <header class="text-center space-y-2">
+    <img src="/assets/logo.png" alt="Fika Goose Logo" class="h-20 mx-auto">
+    <h1 class="text-5xl font-bold">Fika Goose™</h1>
+    <p class="text-xl text-gray-400">Powered by Solana</p>
+  </header>
 
-  <h1>🦢 Welcome to Fika Goose</h1>
-  <p>Connect your wallet to buy premium products with SOL or FikaCoin</p>
-  <button id="connect-wallet">Connect Phantom Wallet</button>
-  <p id="wallet-address"></p>
-
-  <div class="product">
-    <h2>📘 Fika Goose Secrets (eBook)</h2>
-    <p>Discover underground knowledge. Instant delivery after payment.</p>
-    <p><strong>Price: 0.1 SOL</strong></p>
-    <button onclick="buyEbook()">Buy eBook</button>
-    <div id="ebook-download" style="display:none;">
-      ✅ Payment confirmed! <a href="assets/ebook.pdf" download>Download your eBook</a>
+  <section class="grid md:grid-cols-3 gap-8 w-full max-w-6xl">
+    <!-- Goose Vault -->
+    <div class="glass p-6 rounded-2xl">
+      <h2 class="text-2xl font-bold mb-2">Goose Vault (Pre-Order)</h2>
+      <p class="mb-4">Secure USB stick. Limited edition. Only <span id="stock-count">210</span> left.</p>
+      <button onclick="buyProduct('vault')" class="bg-purple-600 px-4 py-2 rounded-full text-white hover:bg-purple-700">Pre-order for 2.1 SOL</button>
     </div>
-  </div>
 
-  <div class="product">
-    <h2>🔐 Fika Goose Vault (USB Stick)</h2>
-    <p>Ultimate privacy USB with Tails OS + encrypted chat app. Only 210 units!</p>
-    <p><strong>Price: 210 EUR (in SOL/FikaCoin)</strong></p>
-    <button onclick="buyVault()">Buy USB Vault</button>
-    <div id="vault-form" style="display:none;">
-      ✅ Payment confirmed! Enter your shipping info:<br>
-      <textarea placeholder="Name, Address, Country..." rows="4" cols="40"></textarea>
-      <p><em>We will NOT store this info online. It will be shown once to you and sent manually.</em></p>
+    <!-- Comic Book -->
+    <div class="glass p-6 rounded-2xl">
+      <h2 class="text-2xl font-bold mb-2">Monthly Comic Book</h2>
+      <p class="mb-4">Get Volume #1 now. 4.20 EUR in SOL</p>
+      <button onclick="buyProduct('comic')" class="bg-yellow-500 px-4 py-2 rounded-full text-white hover:bg-yellow-600">Buy for 0.05 SOL</button>
     </div>
-  </div>
+
+    <!-- NFT Collection -->
+    <div class="glass p-6 rounded-2xl">
+      <h2 class="text-2xl font-bold mb-2">40 NFT Collection</h2>
+      <p class="mb-4">Claim your digital Fika character. Unlock 40 comic volumes.</p>
+      <a href="https://solsea.io/collection/YOUR_COLLECTION_ID" target="_blank" class="bg-green-500 px-4 py-2 rounded-full text-white hover:bg-green-600 block text-center">Go to Solsea</a>
+    </div>
+  </section>
+
+  <div id="status" class="text-center text-green-400 mt-4"></div>
+
+  <footer class="mt-12 text-sm text-gray-500">
+    &copy; 2025 Fika Goose™. Built on Solana.
+  </footer>
+
+  <!-- Firebase + JS -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-database-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT.firebaseio.com",
+      projectId: "YOUR_PROJECT",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "SENDER_ID",
+      appId: "APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const stockRef = db.ref("goose_vault_stock");
+    stockRef.on("value", (snapshot) => {
+      document.getElementById("stock-count").textContent = snapshot.val();
+    });
+  </script>
 
   <script>
-    let userPublicKey;
-    const recipientWallet = 'YOUR_WALLET_ADDRESS'; // Replace with your wallet
     const solana = window.solana;
+    const publicKeyToReceive = "fikagoose.sol";
 
-    document.getElementById("connect-wallet").onclick = async () => {
-      if (solana && solana.isPhantom) {
-        try {
-          const res = await solana.connect();
-          userPublicKey = res.publicKey.toString();
-          document.getElementById("wallet-address").innerText = "Connected: " + userPublicKey;
-        } catch (err) {
-          console.error("Wallet connection failed", err);
+    async function buyProduct(type) {
+      if (!solana || !solana.isPhantom) {
+        alert("Phantom Wallet not detected");
+        return;
+      }
+
+      const priceMap = {
+        vault: 2.1,
+        comic: 0.05
+      };
+
+      const lamports = priceMap[type] * solanaWeb3.LAMPORTS_PER_SOL;
+
+      try {
+        await solana.connect();
+        const transaction = new solanaWeb3.Transaction().add(
+          solanaWeb3.SystemProgram.transfer({
+            fromPubkey: solana.publicKey,
+            toPubkey: new solanaWeb3.PublicKey(publicKeyToReceive),
+            lamports: lamports,
+          })
+        );
+
+        let { signature } = await solana.signAndSendTransaction(transaction);
+        document.getElementById("status").innerText = `✅ Payment successful! TX: ${signature}`;
+
+        if (type === 'vault') {
+          const name = prompt("Enter Full Name:");
+          const address = prompt("Enter Shipping Address:");
+          const country = prompt("Enter Country:");
+
+          // Decrement Firebase stock
+          stockRef.transaction((current) => current - 1);
+
+          // Send to n8n webhook
+          fetch("https://your-n8n-instance.com/webhook/fikaVault", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, address, country, tx: signature })
+          });
         }
-      } else {
-        alert("Install Phantom Wallet");
-      }
-    };
 
-    async function sendSol(amountSol) {
-      const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('mainnet-beta'));
-      const transaction = new solanaWeb3.Transaction().add(
-        solanaWeb3.SystemProgram.transfer({
-          fromPubkey: solana.publicKey,
-          toPubkey: new solanaWeb3.PublicKey(recipientWallet),
-          lamports: solanaWeb3.LAMPORTS_PER_SOL * amountSol,
-        })
-      );
-
-      transaction.feePayer = solana.publicKey;
-      transaction.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
-      const signed = await solana.signTransaction(transaction);
-      const txid = await connection.sendRawTransaction(signed.serialize());
-      await connection.confirmTransaction(txid);
-      return txid;
-    }
-
-    async function buyEbook() {
-      const tx = await sendSol(0.1);
-      if (tx) {
-        document.getElementById("ebook-download").style.display = "block";
-      }
-    }
-
-    async function buyVault() {
-      const tx = await sendSol(2.1); // Adjust based on EUR/SOL rate
-      if (tx) {
-        document.getElementById("vault-form").style.display = "block";
+        if (type === 'comic') {
+          window.open("/assets/ebook.pdf", "_blank");
+        }
+      } catch (err) {
+        console.error(err);
+        document.getElementById("status").innerText = `❌ Payment failed.`;
       }
     }
   </script>
-
 </body>
 </html>
+
+
