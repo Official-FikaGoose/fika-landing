@@ -14,7 +14,7 @@
     }
     .glass {
       background: rgba(255, 255, 255, 0.05);
-      border-radius: 2xl;
+      border-radius: 1rem;
       box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
       backdrop-filter: blur(10px);
     }
@@ -109,19 +109,32 @@
         document.getElementById("status").innerText = `✅ Payment successful! TX: ${signature}`;
 
         if (type === 'vault') {
-          const name = prompt("Enter Full Name:");
-          const address = prompt("Enter Shipping Address:");
-          const country = prompt("Enter Country:");
+          const name = prompt("Enter your full name:");
+          const address = prompt("Enter your shipping address:");
+          const country = prompt("Enter your country:");
 
-          // Decrement Firebase stock
-          stockRef.transaction((current) => current - 1);
+          if (name && address && country) {
+            // Decrement Firebase stock
+            stockRef.transaction((current) => current - 1);
 
-          // Send to n8n webhook
-          fetch("https://your-n8n-instance.com/webhook/fikaVault", {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, address, country, tx: signature })
-          });
+            await fetch("https://yoden.app.n8n.cloud/webhook-test/fikaVault", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                name,
+                address,
+                country,
+                wallet: solana.publicKey.toString(),
+                tx: signature,
+              }),
+            });
+
+            alert("✅ Pre-order complete! Shipping info submitted. Thank you!");
+          } else {
+            alert("❌ Shipping info missing. Please complete all fields.");
+          }
         }
 
         if (type === 'comic') {
@@ -135,5 +148,6 @@
   </script>
 </body>
 </html>
+
 
 
