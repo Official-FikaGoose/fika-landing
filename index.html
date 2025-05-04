@@ -289,30 +289,57 @@
         <img src="phantom-logo.png" class="partner-logo" alt="Phantom Wallet" loading="lazy">
         <img src="solsea-logo.png" class="partner-logo" alt="SolSea NFT Marketplace" loading="lazy">
     </div>
-     <!-- Popular This Week Carousel -->
-    <section class="carousel-section">
-        <h2>Popular This Week</h2>
-        <div class="carousel">
-            <div class="carousel-card active">
-                <h3>Digital Decades</h3>
-                <p>$24.1m</p>
-            </div>
-            <!-- Add more cards here -->
-        </div>
-    </section>
+      <section class="section">
+    <h3>Popular Art This Week</h3>
+    <div class="cards">
+      <div class="card">Art #1</div>
+      <div class="card">Art #2</div>
+      <div class="card">Art #3</div>
+      <div class="card">Art #4</div>
+      <div class="card">Art #5</div>
+      <div class="card">Art #6</div>
+    </div>
+  </section>
     <!-- AI Generator Section -->
-    <center><section class="ai-generator">
-        <h2>AI Image Generator Power by Flux</h2>
-        <div class="generator-box">
-            <input type="text" placeholder="Enter your prompt..." style="width: 60%; padding: 1rem;">
-            <button style="background: #8e2de2; color: white; padding: 1rem 2rem; border: none; margin-left: 1rem;">
-                Generate
-            </button>
-            <div id="generated-image" style="margin-top: 2rem;">
-                <!-- AI generated images will appear here -->
-            </div>
-        </div>
-   </center> </section>
+   <section class="hero">
+  <h2>Generate Art with Fika Goose™ AI</h2>
+  <input id="prompt" type="text" placeholder="Describe your art..." style="padding: 0.5rem; width: 300px;" />
+  <button onclick="generateImage()">Generate</button>
+  <div id="output" style="margin-top: 2rem;"></div>
+</section>
+<script>
+  async function generateImage() {
+    const prompt = document.getElementById('prompt').value;
+    const outputDiv = document.getElementById('output');
+
+    outputDiv.innerHTML = "⏳ Generating image...";
+
+    const response = await fetch("https://api-inference.huggingface.co/models/YOUR_USERNAME/YOUR_MODEL", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer YOUR_HF_TOKEN",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ inputs: prompt })
+    });
+
+    if (!response.ok) {
+      outputDiv.innerHTML = "⚠️ Error generating image.";
+      return;
+    }
+
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+
+    outputDiv.innerHTML = `<img src="${url}" alt="Generated Art" style="max-width: 100%; border-radius: 12px;" />`;
+
+    // Auto-revoke URL after 60 seconds
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+      outputDiv.innerHTML = "⛔️ Image expired. Generate another!";
+    }, 60000);
+  }
+</script>
     <!-- POD Section -->
     <section class="pod-section">
         <h2 style="grid-column: 1 / -1;">Explore Artworks</h2>
@@ -333,7 +360,7 @@
         <div class="footer-section">
             <h3>Fika Goose™ Ecosystem</h3>
             <p>Curated culture on-chain. Fika Goose™ blends high-concept streetwear with exclusive 
-                digital assets—returning the power to the people, one drop at a time.</p>
+                digital assets returning the power to the people, one drop at a time.</p>
         </div>
         <div class="footer-section">
             <h3>Resources</h3>
@@ -348,10 +375,38 @@
             <a href="#">Comics Book</a>
         </div>
     </footer>
-
     <div class="disclaimer">
         <p>Fika Goose™ does not endorse or assume responsibility for user-generated content. By using this platform, you agree to our <a href="#">Terms of Service</a> and <a href="#">Community Guidelines</a>.</p>
         <p>All transactions are final and conducted on the Solana blockchain.</p>
-    </div>
+   <div class="Social Media">
+        <img src="phantom-logo.png" class="partner-logo" alt="Phantom Wallet" loading="lazy">
+        <img src="solsea-logo.png" class="partner-logo" alt="SolSea NFT Marketplace" loading="lazy">
+    </div></div>
+    <script>
+    document.getElementById("generate-btn").addEventListener("click", async () => {
+        const prompt = document.getElementById("prompt-input").value;
+        const outputContainer = document.getElementById("generated-image");
+        outputContainer.innerHTML = "Generating image...";
+
+        try {
+            const response = await fetch("https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer YOUR_HUGGINGFACE_API_KEY",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ inputs: prompt })
+            });
+
+            if (!response.ok) throw new Error("Generation failed");
+
+            const blob = await response.blob();
+            const imageUrl = URL.createObjectURL(blob);
+            outputContainer.innerHTML = `<img src="${imageUrl}" alt="Generated Art" style="max-width: 100%; border-radius: 12px;">`;
+        } catch (error) {
+            outputContainer.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+        }
+    });
+</script>
 </body>
 </html>
