@@ -3,27 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PLAY NIFT - NFT Marketplace</title>
+    <meta name="description" content="Fika Goose™ - Premier NFT Marketplace for Digital Art and Collectibles">
+    <meta name="keywords" content="NFT, Blockchain, Digital Art, Crypto, Fika Goose">
+    <title>Fika Goose™ | NFT Marketplace</title>
+    <link rel="icon" href="fikagoose-favicon.ico" type="image/x-icon">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Arial', sans-serif;
+            transition: all 0.3s ease;
         }
 
         body {
             background: #0A0A0A;
             color: white;
+            line-height: 1.6;
         }
 
         /* Header Styles */
         .header {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             padding: 1.5rem 5%;
             background: #111111;
-            border-bottom: 1px solid #222222;
+            border-bottom: 1px solid #2A2A2A;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo img {
+            height: 45px;
+            width: auto;
         }
 
         .nav-links {
@@ -35,18 +49,32 @@
             color: #CCCCCC;
             text-decoration: none;
             font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+        }
+
+        .nav-links a:hover {
+            background: rgba(138,43,226,0.1);
+            color: #8A2BE2;
         }
 
         /* Hero Section */
         .hero {
             text-align: center;
-            padding: 4rem 5%;
-            background: linear-gradient(45deg, #1A1A1A, #2A2A2A);
+            padding: 6rem 5% 4rem;
+            background: linear-gradient(45deg, #1A1A1A 30%, #2A2A2A 100%);
         }
 
         .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            color: #AAAAAA;
+            max-width: 600px;
+            margin: 0 auto 2rem;
         }
 
         /* Stats Grid */
@@ -60,14 +88,16 @@
         .stat-card {
             background: #1A1A1A;
             padding: 2rem;
-            border-radius: 10px;
+            border-radius: 12px;
             text-align: center;
+            border: 1px solid #2A2A2A;
         }
 
         .stat-number {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: bold;
             color: #8A2BE2;
+            margin-bottom: 0.5rem;
         }
 
         /* Marketplace Grid */
@@ -80,17 +110,31 @@
 
         .nft-card {
             background: #1A1A1A;
-            border-radius: 12px;
+            border-radius: 16px;
             overflow: hidden;
+            border: 1px solid #2A2A2A;
+        }
+
+        .nft-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(138,43,226,0.2);
         }
 
         .nft-image {
             height: 250px;
             background: #333333;
+            background-size: cover;
+            background-position: center;
         }
 
         .nft-info {
             padding: 1.5rem;
+        }
+
+        .price {
+            color: #8A2BE2;
+            font-weight: bold;
+            margin-top: 1rem;
         }
 
         /* Partners Section */
@@ -98,13 +142,21 @@
             display: flex;
             justify-content: center;
             gap: 3rem;
-            padding: 2rem;
+            padding: 2rem 5%;
             flex-wrap: wrap;
+            background: #111111;
         }
 
         .partner-logo {
-            height: 40px;
-            opacity: 0.7;
+            height: 35px;
+            opacity: 0.8;
+            filter: grayscale(1);
+            transition: all 0.3s ease;
+        }
+
+        .partner-logo:hover {
+            filter: grayscale(0);
+            opacity: 1;
         }
 
         /* Footer Styles */
@@ -114,10 +166,22 @@
             gap: 2rem;
             padding: 4rem 5%;
             background: #111111;
+            margin-top: 4rem;
         }
 
         .footer-section h3 {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            color: #8A2BE2;
+        }
+
+        .footer-section a {
+            display: block;
+            color: #AAAAAA;
+            text-decoration: none;
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-section a:hover {
             color: #8A2BE2;
         }
 
@@ -125,23 +189,75 @@
             text-align: center;
             padding: 4rem 5%;
             background: #1A1A1A;
+            border-top: 1px solid #2A2A2A;
+            border-bottom: 1px solid #2A2A2A;
         }
 
         .cta-button {
             background: #8A2BE2;
             color: white;
-            padding: 1rem 2rem;
+            padding: 1rem 2.5rem;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
-            margin-top: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .cta-button:hover {
+            background: #6A1B9A;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(138,43,226,0.3);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1.5rem;
+                padding: 1.5rem 5%;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .marketplace-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Legal Disclaimer */
+        .disclaimer {
+            text-align: center;
+            padding: 2rem 5%;
+            background: #1A1A1A;
+            color: #888888;
+            font-size: 0.8rem;
+        }
+
+        .disclaimer a {
+            color: #8A2BE2;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
     <header class="header">
-        <div class="logo">PLAY NIFT</div>
-        <nav class="nav-links">
+        <div class="logo">
+            <img src="fikagoose-logo.png" alt="Fika Goose™ Logo">
+        </div>
+        <nav class="nav-links" aria-label="Main navigation">
             <a href="#">Home</a>
             <a href="#">Explore</a>
             <a href="#">Marketplace</a>
@@ -152,66 +268,93 @@
     </header>
 
     <section class="hero">
-        <h1>Discover, Collect<br>and Sell Dope Art and NFTs</h1>
-        <p>The world's largest global marketplace for crypto and non-fungible tokens (NFT)</p>
-        <button class="cta-button">Get Started</button>
+        <h1>Discover, Collect<br>and Sell Dope Art & NFTs</h1>
+        <p>The Fika Goose™ Metaverse – Where Digital Ownership Meets Revolutionary Technology</p>
+        <button class="cta-button">Start Exploring</button>
     </section>
 
     <div class="stats-grid">
         <div class="stat-card">
             <div class="stat-number">27K+</div>
-            <div>Active Users</div>
+            <div>Active Collectors</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number">$24.1m</div>
-            <div>Total Sales</div>
+            <div class="stat-number">$24.1M</div>
+            <div>Total Volume</div>
         </div>
         <div class="stat-card">
             <div class="stat-number">40K+</div>
-            <div>Artworks</div>
+            <div>Digital Assets</div>
         </div>
     </div>
 
     <div class="partners">
-        <img src="coinbase-logo.png" class="partner-logo" alt="Coinbase">
-        <img src="binance-logo.png" class="partner-logo" alt="Binance">
-        <img src="paypal-logo.png" class="partner-logo" alt="PayPal">
+        <img src="goli-logo.png" class="partner-logo" alt="Goli Cryptocurrency Platform" loading="lazy">
+        <img src="phantom-logo.png" class="partner-logo" alt="Phantom Wallet" loading="lazy">
+        <img src="solsea-logo.png" class="partner-logo" alt="SolSea NFT Marketplace" loading="lazy">
     </div>
-
-    <section class="marketplace-grid">
-        <!-- Repeat this card for each NFT -->
-        <div class="nft-card">
-            <div class="nft-image"></div>
-            <div class="nft-info">
+     <!-- Popular This Week Carousel -->
+    <section class="carousel-section">
+        <h2>Popular This Week</h2>
+        <div class="carousel">
+            <div class="carousel-card active">
                 <h3>Digital Decades</h3>
-                <p>by follow up year</p>
-                <div class="price">80%</div>
+                <p>$24.1m</p>
+            </div>
+            <!-- Add more cards here -->
+        </div>
+    </section>
+    <!-- AI Generator Section -->
+    <section class="ai-generator">
+        <h2>TOP SELLERS - AI Image Generator</h2>
+        <div class="generator-box">
+            <input type="text" placeholder="Enter your prompt..." style="width: 60%; padding: 1rem;">
+            <button style="background: #8e2de2; color: white; padding: 1rem 2rem; border: none; margin-left: 1rem;">
+                Generate
+            </button>
+            <div id="generated-image" style="margin-top: 2rem;">
+                <!-- AI generated images will appear here -->
             </div>
         </div>
     </section>
-
-    <section class="join-community">
-        <h2>Join Us to Create, Sell and Collect NFTs</h2>
-        <button class="cta-button">Join Community</button>
+    <!-- POD Section -->
+    <section class="pod-section">
+        <h2 style="grid-column: 1 / -1;">Explore Artworks</h2>
+        <div class="pod-item">
+            <img src="clothing1.jpg" alt="POD Item" style="width: 100%;">
+            <div style="padding: 1rem;">
+                <h3>Streetwear Collection</h3>
+            </div>
+        </div>
+        <!-- Add more POD items -->
+    </section>
+<section class="join-community">
+        <h2>Join the Fika Goose™ Collective</h2>
+        <button class="cta-button">Become a Member</button>
     </section>
 
     <footer class="footer">
         <div class="footer-section">
-            <h3>Company</h3>
-            <p>The world's largest digital marketplace for crypto and NFTs</p>
+            <h3>Fika Goose™ Ecosystem</h3>
+            <p>Pioneering the future of digital ownership through blockchain technology and curated artistry.</p>
         </div>
         <div class="footer-section">
             <h3>Resources</h3>
             <a href="#">Help Center</a>
-            <a href="#">About</a>
-            <a href="#">News</a>
+            <a href="#">Documentation</a>
+            <a href="#">Blog</a>
         </div>
         <div class="footer-section">
             <h3>Explore</h3>
-            <a href="#">Modern Art</a>
-            <a href="#">Photography</a>
-            <a href="#">Music</a>
+            <a href="#">The Goose Vault</a>
+            <a href="#"> Fashion</a>
+            <a href="#">Curated Collections</a>
         </div>
     </footer>
+
+    <div class="disclaimer">
+        <p>Fika Goose™ does not endorse or assume responsibility for user-generated content. By using this platform, you agree to our <a href="#">Terms of Service</a> and <a href="#">Community Guidelines</a>.</p>
+        <p>All transactions are final and conducted on the Solana blockchain.</p>
+    </div>
 </body>
 </html>
