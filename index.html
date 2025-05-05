@@ -112,35 +112,20 @@
       margin: 2rem auto;
       color: #8A2BE2;
     }
-   .section {
-  padding: 2rem;
-  background-color: #f8f8f8;
-}
-
-.section h3 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 1rem;
-}
-
-.card {
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.card img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      padding: 0 5% 2rem;
+    }
+    .card {
+      background: #1A1A1A;
+      padding: 1.5rem;
+      border-radius: 10px;
+      width: 150px;
+      text-align: center;
+      border: 1px solid #2A2A2A;
     }
     .cta-button, .coffee-btn, button {
       background: #8A2BE2;
@@ -244,28 +229,16 @@
   </section>
 
   <section class="section">
-  <h3>Popular Art This Week</h3>
-  <div class="cards">
-    <div class="card">
-      <img src="images/04_Free_Trading_Card_Mockup1.jpg" alt="Art 1">
+    <h3>Popular Art This Week</h3>
+    <div class="cards">
+      <div class="card">Art #1</div>
+      <div class="card">Art #2</div>
+      <div class="card">Art #3</div>
+      <div class="card">Art #4</div>
+      <div class="card">Art #5</div>
+      <div class="card">Art #6</div>
     </div>
-    <div class="card">
-      <img src="images/04_Free_Trading_Card_Mockup2.jpg" alt="Art 2">
-    </div>
-    <div class="card">
-      <img src="images/04_Free_Trading_Card_Mockup3.jpg" alt="Art 3">
-    </div>
-    <div class="card">
-      <img src="images/04_Free_Trading_Card_Mockup4.jpg" alt="Art 4">
-    </div>
-    <div class="card">
-      <img src="images/04_Free_Trading_Card_Mockup5.jpg" alt="Art 5">
-    </div>
-    <div class="card">
-      <img src="images/04_Free_Trading_Card_Mockup6.jpg" alt="Art 6">
-    </div>
-  </div>
-</section>
+  </section>
 
   <section class="hero">
     <h2>Generate Art with Fika Goose™ AI</h2>
@@ -327,7 +300,7 @@
 
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);
-        outputDiv.innerHTML = <img src="${url}" alt="Generated Art" style="max-width: 100%; border-radius: 12px;" />;
+        outputDiv.innerHTML = `<img src="${url}" alt="Generated Art" style="max-width: 100%; border-radius: 12px;" />`;
 
         setTimeout(() => URL.revokeObjectURL(url), 60000);
       } catch (error) {
@@ -342,4 +315,5 @@
   </script>
 </body>
 </html>
+
 
