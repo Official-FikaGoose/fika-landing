@@ -264,7 +264,7 @@
         </div>
       </div>
       <div class="card">
-        <img src="images/Mockup6.jpg" alt="Art 5" class="nft-image">
+        <img src="images/Mockup6.jpg" alt="Art 6" class="nft-image">
         <div class="info">
           <div class="title">Futurist Funk</div>
           <div class="author">by SpaceChill</div>
@@ -273,6 +273,80 @@
         </div>
       </div>
   </section>
+  
+  <section class="hero">
+    <h2>Generate Art with Fika Goose™ AI</h2>
+    <p>By using this tool you agree to our <a href="#">Terms</a>. Connect wallet to continue.</p>
+    <input id="prompt" type="text" placeholder="Describe your art..." style="padding: 0.5rem; width: 300px;" />
+    <button onclick="generateImage()">Generate</button>
+    <div id="output" style="margin-top: 2rem;"></div>
+  </section>
+
+  <div class="coffee-cta">
+    <p>Support Fika Goose:</p>
+    <button class="coffee-btn" onclick="sendCoffee()">☕ Buy a Coffee (0.001 SOL)</button>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-section">
+      <h3>Explore</h3>
+      <a href="#">Marketplace</a>
+      <a href="#">Blog</a>
+      <a href="#">About</a>
+    </div>
+    <div class="footer-section">
+      <h3>Connect</h3>
+      <a href="#">Discord</a>
+      <a href="#">Twitter</a>
+      <a href="#">Instagram</a>
+    </div>
+    <div class="footer-section">
+      <h3>Legal</h3>
+      <a href="#">Terms of Use</a>
+      <a href="#">Privacy Policy</a>
+    </div>
+  </footer>
+
+  <div class="disclaimer">
+    &copy; 2025 Fika Goose™. All rights reserved. <a href="#">Read Terms</a>
+  </div>
+
+  <script>
+    async function generateImage() {
+      const prompt = document.getElementById('prompt').value;
+      const outputDiv = document.getElementById('output');
+      outputDiv.innerHTML = "⏳ Generating image...";
+
+      try {
+        const response = await fetch("https://api-inference.huggingface.co/models/YOUR_USERNAME/YOUR_MODEL", {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer YOUR_HF_TOKEN",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ inputs: prompt })
+        });
+
+        if (!response.ok) {
+          outputDiv.innerHTML = "⚠️ Error generating image.";
+          return;
+        }
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        outputDiv.innerHTML = `<img src="${url}" alt="Generated Art" style="max-width: 100%; border-radius: 12px;" />`;
+
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+      } catch (error) {
+        outputDiv.innerHTML = "⚠️ Error connecting to AI generator.";
+      }
+    }
+
+    function sendCoffee() {
+      alert("Redirecting to your Solana wallet to send 0.001 SOL to FikaGoose.sol...");
+      // Integrate with Solana wallet SDK here
+    }
+  </script>
 </body>
 </html>
 
